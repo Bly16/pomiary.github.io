@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomiary</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      margin: 0;
+      background: linear-gradient(to right, #e44d26, #3498db);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-top: 50px;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      transition: font-size 0.3s ease-in-out;
+    }
+
+    h1:hover {
+      font-size: 40px;
+    }
+
+    #data-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1s ease-in-out;
+      transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    }
+
+    #data-container:hover {
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    p {
+      font-size: 24px;
+      margin: 10px 0;
+      color: #555;
+    }
+
+    #temperature, #humidity {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon {
+      font-size: 36px;
+      margin-right: 10px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    #temperature:hover .icon {
+      transform: rotate(180deg);
+    }
+
+    #humidity:hover .icon {
+      transform: scale(1.2);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Pomiary <i class="fas fa-chart-line"></i></h1>
+<div id="data-container">
+  <p id="temperature">
+    <span class="icon"><i class="fas fa-thermometer-half"></i></span>
+    Temperatura: Ładowanie...
+  </p>
+  <p id="humidity">
+    <span class="icon"><i class="fas fa-tint"></i></span>
+    Wilgotność: Ładowanie...
+  </p>
+</div>
+
+<script>
+  function fetchData() {
+    fetch("http://192.168.0.59/")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("temperature").innerHTML = `
+          <span class="icon"><i class="fas fa-thermometer-half"></i></span>
+          Temperatura: ${data.temperatura} C`;
+        document.getElementById("humidity").innerHTML = `
+          <span class="icon"><i class="fas fa-tint"></i></span>
+          Wilgotność: ${data.wilgotnosc}%`;
+      })
+      .catch(error => {
+        console.error("Błąd pobierania danych:", error);
+        document.getElementById("temperature").innerText = "Błąd pobierania danych";
+        document.getElementById("humidity").innerText = "Błąd pobierania danych";
+      })
+      .finally(() => setTimeout(fetchData, 5000));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetchData();
+  });
+</script>
+
+</body>
+</html>
