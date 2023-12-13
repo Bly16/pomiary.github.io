@@ -93,7 +93,7 @@
 
 <script>
   function fetchData() {
-    fetch("http://192.168.0.59/")
+    fetch("https://192.168.0.59/")  // Zmiana protokołu na HTTPS
       .then(response => response.json())
       .then(data => {
         document.getElementById("temperature").innerHTML = `
@@ -115,6 +115,7 @@
     fetchData();
   });
 </script>
+
 
 </body>
 </html>
